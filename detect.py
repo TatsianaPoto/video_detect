@@ -2,6 +2,7 @@ import cv2
 import pandas as pd
 import argparse
 import os
+import random
 
 def draw_rectangles_with_labels(video_path, csv_path):
     # Load video
@@ -44,16 +45,20 @@ def draw_rectangles_with_labels(video_path, csv_path):
             abs_x1 = int(x1 * width)
             abs_y1 = int(y1 * height)
 
-            cv2.rectangle(frame, (abs_x0, abs_y0), (abs_x1, abs_y1), (0, 255, 0), 2)
+            cv2.rectangle(frame, (abs_x0, abs_y0), (abs_x1, abs_y1), (118, 155, 0), 2)
 
             id_value = str(row['frame'])
-            cv2.putText(frame, id_value, (abs_x0, abs_y0 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+            cv2.putText(frame, id_value, (abs_x0, abs_y0 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 100), 2)
+
+        # Add watermark to the frame
+        watermark = cv2.putText(frame, 'ByTacya', (random.randint(0, width - 200), random.randint(50, height - 50)),
+                                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 155, 100), 2, cv2.LINE_AA)
 
         # Display current frame with rectangles and labels
-        cv2.imshow('Video', frame)
+        cv2.imshow('Video', watermark)
 
         # Save the frame to the output video
-        output_video.write(frame)
+        output_video.write(watermark)
 
         # Check for 'q' key press to exit the loop
         if cv2.waitKey(1) & 0xFF == ord('q'):
